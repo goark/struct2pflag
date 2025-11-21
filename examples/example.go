@@ -3,16 +3,16 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 
-	"github.com/hymkor/struct2flag"
+	"github.com/goark/struct2pflag"
+	"github.com/spf13/pflag"
 )
 
 type Env struct {
-	B bool   `flag:"b,This is a boolean flag"`
-	N int    `flag:"n,This is an integer flag"`
-	S string `flag:"s,this is a string flag"`
+	B bool   `pflag:"boolean,b,This is a boolean flag"`
+	N int    `pflag:"integer,n,This is an integer flag"`
+	S string `pflag:"string,s,this is a string flag"`
 }
 
 func (e Env) Run() {
@@ -23,7 +23,7 @@ func (e Env) Run() {
 
 func main() {
 	var env Env
-	struct2flag.BindDefault(&env)
-	flag.Parse()
+	struct2pflag.BindDefault(&env)
+	pflag.Parse()
 	env.Run()
 }
