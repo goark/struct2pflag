@@ -1,12 +1,13 @@
-package struct2flag
+package struct2pflag
 
 import (
-	"flag"
 	"reflect"
 	"strings"
+
+	"github.com/spf13/pflag"
 )
 
-func Bind(fs *flag.FlagSet, cfg interface{}) {
+func Bind(fs *pflag.FlagSet, cfg interface{}) {
 	v := reflect.ValueOf(cfg).Elem()
 	t := v.Type()
 
@@ -17,7 +18,7 @@ func Bind(fs *flag.FlagSet, cfg interface{}) {
 		if !field.IsExported() {
 			continue
 		}
-		desc, ok := field.Tag.Lookup("flag")
+		desc, ok := field.Tag.Lookup("pflag")
 		if !ok {
 			continue
 		}
@@ -31,24 +32,32 @@ func Bind(fs *flag.FlagSet, cfg interface{}) {
 				continue
 			}
 		}
-		name, usage, ok := strings.Cut(desc, ",")
+		var shortname, usage string
+		longname, rest, ok := strings.Cut(desc, ",")
 		if !ok {
-			name = strings.ToLower(field.Name)
+			longname = strings.ToLower(field.Name)
 			usage = desc
+		} else {
+			shortname, usage, ok = strings.Cut(rest, ",")
+			if !ok {
+				shortname = ""
+				usage = rest
+			}
 		}
+
 		switch f.Kind() {
 		case reflect.Bool:
-			fs.BoolVar(f.Addr().Interface().(*bool), name, f.Bool(), usage)
+			fs.BoolVarP(f.Addr().Interface().(*bool), longname, shortname, f.Bool(), usage)
 		case reflect.Int:
-			fs.IntVar(f.Addr().Interface().(*int), name, int(f.Int()), usage)
+			fs.IntVarP(f.Addr().Interface().(*int), longname, shortname, int(f.Int()), usage)
 		case reflect.Uint:
-			fs.UintVar(f.Addr().Interface().(*uint), name, uint(f.Uint()), usage)
+			fs.UintVarP(f.Addr().Interface().(*uint), longname, shortname, uint(f.Uint()), usage)
 		case reflect.String:
-			fs.StringVar(f.Addr().Interface().(*string), name, f.String(), usage)
+			fs.StringVarP(f.Addr().Interface().(*string), longname, shortname, f.String(), usage)
 		}
 	}
 }
 
 func BindDefault(cfg interface{}) {
-	Bind(flag.CommandLine, cfg)
+	Bind(pflag.CommandLine, cfg)
 }

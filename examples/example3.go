@@ -3,19 +3,19 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 
 	"encoding/json"
 
-	"github.com/hymkor/struct2flag"
+	"github.com/goark/struct2pflag"
+	"github.com/spf13/pflag"
 )
 
 type Env struct {
-	B bool   `flag:"b,This is a boolean flag"  json:"b"`
-	N int    `flag:"n,This is an integer flag" json:"n"`
-	S string `flag:"s,this is a string flag"   json:"s"`
+	B bool   `pflag:"boolean,b,This is a boolean flag"  json:"b"`
+	N int    `pflag:"integer,n,This is an integer flag" json:"n"`
+	S string `pflag:"string,s,this is a string flag"    json:"s"`
 }
 
 func (e Env) Run() {
@@ -28,9 +28,9 @@ func main() {
 	var env Env
 
 	if data, err := os.ReadFile("example3.json"); err == nil {
-		err = json.Unmarshal(data, &env)
+		_ = json.Unmarshal(data, &env)
 	}
-	struct2flag.BindDefault(&env)
-	flag.Parse()
+	struct2pflag.BindDefault(&env)
+	pflag.Parse()
 	env.Run()
 }

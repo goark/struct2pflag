@@ -1,13 +1,14 @@
-struct2flag
-===========
+# [struct2pflag]
 
 <!-- badges.cmd |-->
-[![Go Test](https://github.com/hymkor/struct2flag/actions/workflows/go.yml/badge.svg)](https://github.com/hymkor/struct2flag/actions/workflows/go.yml)
-[![License](https://img.shields.io/badge/License-MIT-red)](https://github.com/hymkor/struct2flag/blob/master/LICENSE)
-[![Go Reference](https://pkg.go.dev/badge/github.com/hymkor/struct2flag.svg)](https://pkg.go.dev/github.com/hymkor/struct2flag)
+[![lint status](https://github.com/goark/struct2pflag/workflows/lint/badge.svg)](https://github.com/goark/struct2pflag/actions)
+[![GitHub license](http://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/goark/struct2pflag/master/LICENSE)
+[![GitHub release](http://img.shields.io/github/release/goark/struct2pflag.svg)](https://github.com/goark/mt/releases/latest)
 <!-- -->
 
 `struct2flag` automatically registers struct fields as flags for your Go command-line programs.
+
+(forked from [hymkor/struct2flag](https://github.com/hymkor/struct2flag))
 
 Minimal example
 ---------------
@@ -18,44 +19,50 @@ Minimal example
 package main
 
 import (
-    "flag"
-    "fmt"
+	"fmt"
 
-    "github.com/hymkor/struct2flag"
+	"github.com/goark/struct2pflag"
+	"github.com/spf13/pflag"
 )
 
 type Env struct {
-    B bool   `flag:"b,This is a boolean flag"`
-    N int    `flag:"n,This is an integer flag"`
-    S string `flag:"s,this is a string flag"`
+	B bool   `pflag:"boolean,b,This is a boolean flag"`
+	N int    `pflag:"integer,n,This is an integer flag"`
+	S string `pflag:"string,s,this is a string flag"`
 }
 
 func (e Env) Run() {
-    fmt.Printf("B=%#v\n", e.B)
-    fmt.Printf("N=%#v\n", e.N)
-    fmt.Printf("S=%#v\n", e.S)
+	fmt.Printf("B=%#v\n", e.B)
+	fmt.Printf("N=%#v\n", e.N)
+	fmt.Printf("S=%#v\n", e.S)
 }
 
 func main() {
-    var env Env
-    struct2flag.BindDefault(&env)
-    flag.Parse()
-    env.Run()
+	var env Env
+	struct2pflag.BindDefault(&env)
+	pflag.Parse()
+	env.Run()
 }
 ```
 
 `go run examples/example.go -h`
 
 ```go run examples/example.go -h |
-Usage of R:\df\dfb7c209f28c64eff269f05153103a4f101eb68e09b8bbe29bf301cba35b584e-d\example.exe:
-  -b	This is a boolean flag
-  -n int
-    	This is an integer flag
-  -s string
-    	this is a string flag
+Usage of /home/username/.cache/go-build/da/da816f0e7f8408541782f4f492c77975deac083e65218c1b2bdcf93706b81aa7-d/example:
+  -b, --boolean         This is a boolean flag
+  -n, --integer int     This is an integer flag
+  -s, --string string   this is a string flag
 ```
 
 `go run examples/example.go -b -n 1 -s foo`
+
+```go run examples/example.go -b -n 1 -s foo |
+B=true
+N=1
+S="foo"
+```
+
+`go run examples/example.go --boolean --integer 1 --string foo`
 
 ```go run examples/example.go -b -n 1 -s foo |
 B=true
@@ -72,36 +79,36 @@ Reading default values from JSON and overriding them with command-line flags
 package main
 
 import (
-    "flag"
-    "fmt"
-    "os"
+	"fmt"
+	"os"
 
-    "encoding/json"
+	"encoding/json"
 
-    "github.com/hymkor/struct2flag"
+	"github.com/goark/struct2pflag"
+	"github.com/spf13/pflag"
 )
 
 type Env struct {
-    B bool   `flag:"b,This is a boolean flag"  json:"b"`
-    N int    `flag:"n,This is an integer flag" json:"n"`
-    S string `flag:"s,this is a string flag"   json:"s"`
+	B bool   `pflag:"boolean,b,This is a boolean flag"  json:"b"`
+	N int    `pflag:"integer,n,This is an integer flag" json:"n"`
+	S string `pflag:"string,s,this is a string flag"    json:"s"`
 }
 
 func (e Env) Run() {
-    fmt.Printf("B=%#v\n", e.B)
-    fmt.Printf("N=%#v\n", e.N)
-    fmt.Printf("S=%#v\n", e.S)
+	fmt.Printf("B=%#v\n", e.B)
+	fmt.Printf("N=%#v\n", e.N)
+	fmt.Printf("S=%#v\n", e.S)
 }
 
 func main() {
-    var env Env
+	var env Env
 
-    if data, err := os.ReadFile("example3.json"); err == nil {
-        err = json.Unmarshal(data, &env)
-    }
-    struct2flag.BindDefault(&env)
-    flag.Parse()
-    env.Run()
+	if data, err := os.ReadFile("example3.json"); err == nil {
+		_ = json.Unmarshal(data, &env)
+	}
+	struct2pflag.BindDefault(&env)
+	pflag.Parse()
+	env.Run()
 }
 ```
 
@@ -122,3 +129,5 @@ B=true
 N=100
 S="changed"
 ```
+
+[struct2pflag]: https://github.com/goark/struct2pflag "automatically registers struct fields as flags for your Go command-line tools."

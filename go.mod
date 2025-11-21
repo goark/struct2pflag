@@ -1,3 +1,7 @@
-module github.com/hymkor/struct2flag
+module github.com/goark/struct2pflag
 
-go 1.20
+go 1.25
+
+require (
+	github.com/spf13/pflag v1.0.10
+)

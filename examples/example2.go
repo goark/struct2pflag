@@ -3,24 +3,24 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 
-	"github.com/hymkor/struct2flag"
+	"github.com/goark/struct2pflag"
+	"github.com/spf13/pflag"
 )
 
 type SubConfig1 struct {
-	Debug bool `flag:"d,Enable debug mode"`
+	Debug bool `pflag:"debug,d,Enable debug mode"`
 }
 
 type SubConfig2 struct {
-	Verbose bool `flag:"v,Enable verbose mode"`
+	Verbose bool `pflag:"verbose,v,Enable verbose mode"`
 }
 
 type Config struct {
-	Name string `flag:"name,Set your name"`
+	Name string `pflag:"name,Set your name"`
 	Sub1 SubConfig1
-	Sub2 SubConfig2 `flag:""`
+	Sub2 SubConfig2 `pflag:""`
 }
 
 func (c *Config) Run() {
@@ -31,8 +31,8 @@ func (c *Config) Run() {
 
 func main() {
 	var cfg Config
-	struct2flag.BindDefault(&cfg)
-	flag.Parse()
+	struct2pflag.BindDefault(&cfg)
+	pflag.Parse()
 
 	cfg.Run()
 }
