@@ -4,9 +4,10 @@
 [![lint status](https://github.com/goark/struct2pflag/workflows/lint/badge.svg)](https://github.com/goark/struct2pflag/actions)
 [![GitHub license](http://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/goark/struct2pflag/master/LICENSE)
 [![GitHub release](http://img.shields.io/github/release/goark/struct2pflag.svg)](https://github.com/goark/mt/releases/latest)
+[![Go reference](https://pkg.go.dev/badge/github.com/goark/struct2pflag.svg)](https://pkg.go.dev/github.com/goark/struct2pflag)
 <!-- -->
 
-`struct2flag` automatically registers struct fields as flags for your Go command-line programs.
+[`struct2pflag`][struct2pflag] automatically registers struct fields as flags for your Go command-line programs.
 
 (forked from [hymkor/struct2flag](https://github.com/hymkor/struct2flag))
 
