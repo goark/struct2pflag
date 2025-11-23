@@ -130,4 +130,9 @@ N=100
 S="changed"
 ```
 
+Modules Requirement Graph
+-------------------------
+
+[![dependency.png](./dependency.png)](./dependency.png)
+
 [struct2pflag]: https://github.com/goark/struct2pflag "automatically registers struct fields as flags for your Go command-line tools."
